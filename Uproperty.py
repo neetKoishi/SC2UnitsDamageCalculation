@@ -1,6 +1,3 @@
-import inspect
-
-
 class sc_A:
 
     def __init__(
@@ -13,17 +10,34 @@ class sc_A:
             sc_dict: dict,
     ) -> None:
         if sc_dict:
-            # self._globals = {'self': self.__dict__}
             for k, v in sc_dict.items():
-                # self._globals.update({f'{k}': f'{v}'})
-                # print(self._globals)
-                exec(f'self.{k}={v}')
+                exec(f'self._{k}={v}')
         else:
-            self.name: str = name
-            self.type_label: list = type_label  # 标签
-            self.hp: int = hp  # 血量
-            self.atk: dict = atk  # 攻击力
-            self.hp_defense: int = hp_defense  # 血防
+            self._name: str = name
+            self._type_label: list = type_label  # 标签
+            self._hp: int = hp  # 血量
+            self._atk: dict = atk  # 攻击力
+            self._hp_defense: int = hp_defense  # 血防
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def hp(self):
+        return self._hp
+
+    @property
+    def atk(self):
+        return self._atk
+
+    @property
+    def hp_defense(self):
+        return self._hp_defense
+
+    @property
+    def type_label(self):
+        return self._type_label
 
 
 class sc_P(sc_A):
@@ -40,8 +54,18 @@ class sc_P(sc_A):
     ):
         super(sc_P, self).__init__(name, hp, atk, hp_defense, type_label, sc_dict)
         if not sc_dict:
-            self.shield: int = shield  # 护盾
-            self.shield_defense: int = shield_defense  # 盾防
+            self._shield: int = shield  # 护盾
+            self._shield_defense: int = shield_defense  # 盾防
+
+    @property
+    def shield(self):
+        return self._shield
+
+    @property
+    def shield_defense(self):
+        return self._shield_defense
+
+
 
 
 class sc_Z(sc_A):
