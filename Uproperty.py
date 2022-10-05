@@ -7,6 +7,8 @@ class sc_A:
             atk: dict,
             hp_defense: int,
             type_label: list,
+            upgrade_hp: int,
+            upgrade_atk: dict,
             sc_dict: dict,
     ) -> None:
         if sc_dict:
@@ -18,6 +20,8 @@ class sc_A:
             self._hp: int = hp  # 血量
             self._atk: dict = atk  # 攻击力
             self._hp_defense: int = hp_defense  # 血防
+            self._upgrade_hp: int = upgrade_hp  # 防御升级
+            self._upgrade_atk: dict = upgrade_atk  # 攻击升级
 
     @property
     def name(self):
@@ -50,12 +54,16 @@ class sc_P(sc_A):
             atk: dict = None,
             hp_defense: int = 0,
             type_label: list = None,
-            sc_dict: dict = None
+            sc_dict: dict = None,
+            upgrade_hp: int = 0,
+            upgrade_atk: dict = None,
+            upgrade_shield: int = 0
     ):
-        super(sc_P, self).__init__(name, hp, atk, hp_defense, type_label, sc_dict)
+        super(sc_P, self).__init__(name, hp, atk, hp_defense, type_label, upgrade_hp, upgrade_atk, sc_dict, )
         if not sc_dict:
             self._shield: int = shield  # 护盾
             self._shield_defense: int = shield_defense  # 盾防
+            self._upgrade_shield: int = upgrade_shield  # 盾升级
 
     @property
     def shield(self):
@@ -66,8 +74,6 @@ class sc_P(sc_A):
         return self._shield_defense
 
 
-
-
 class sc_Z(sc_A):
     def __init__(
             self,
@@ -76,9 +82,11 @@ class sc_Z(sc_A):
             atk: dict = None,
             hp_defense: int = 0,
             type_label: list = None,
-            sc_dict: dict = None
+            sc_dict: dict = None,
+            upgrade_hp: int = 0,
+            upgrade_atk: dict = None,
     ):
-        super().__init__(name, hp, atk, hp_defense, type_label, sc_dict)
+        super().__init__(name, hp, atk, hp_defense, type_label, upgrade_hp, upgrade_atk, sc_dict)
 
 
 class sc_T(sc_A):
@@ -89,6 +97,8 @@ class sc_T(sc_A):
             atk: dict = 0,
             hp_defense: int = 0,
             type_label: list = None,
-            sc_dict: dict = None
+            sc_dict: dict = None,
+            upgrade_hp: int = 0,
+            upgrade_atk: dict = None
     ):
-        super().__init__(name, hp, atk, hp_defense, type_label, sc_dict)
+        super().__init__(name, hp, atk, hp_defense, type_label, upgrade_hp, upgrade_atk, sc_dict)

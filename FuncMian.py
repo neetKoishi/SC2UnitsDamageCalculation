@@ -2,18 +2,6 @@ from Uproperty import sc_P, sc_T, sc_Z, sc_A
 from math import ceil
 
 
-#
-#
-# z = sc_Z(sc_dict=
-#          {
-#             'name': "'aa'",
-#             'hp': 31,
-#             'atk': 10,
-#             'hp_defense': 9,
-#             'type_label': ['bb', 'cc']
-#          })
-#
-
 def func_SC(type_object_A: sc_A, type_object_B: sc_A) -> int:
     """计算A打B需要的次数,A进攻,B防守"""
     atk_A = sc_MatchTag(type_object_A.atk, type_object_B.type_label)  # A对B的攻击力
@@ -69,6 +57,6 @@ if __name__ == '__main__':
         'hp_defense': 0,
         'type_label': ['轻甲', '生物单位']
     })
-    print(p,p.__dict__)
+    print(p, p.__dict__)
     print(p.shield)
     print(func_SC(p, t))
