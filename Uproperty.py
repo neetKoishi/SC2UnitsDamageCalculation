@@ -54,10 +54,10 @@ class sc_P(sc_A):
             atk: dict = None,
             hp_defense: int = 0,
             type_label: list = None,
-            sc_dict: dict = None,
             upgrade_hp: int = 0,
             upgrade_atk: dict = None,
-            upgrade_shield: int = 0
+            upgrade_shield: int = 0,
+            sc_dict: dict = None,
     ):
         super(sc_P, self).__init__(name, hp, atk, hp_defense, type_label, upgrade_hp, upgrade_atk, sc_dict, )
         if not sc_dict:
@@ -74,6 +74,7 @@ class sc_P(sc_A):
         return self._shield_defense
 
 
+
 class sc_Z(sc_A):
     def __init__(
             self,
@@ -82,9 +83,9 @@ class sc_Z(sc_A):
             atk: dict = None,
             hp_defense: int = 0,
             type_label: list = None,
-            sc_dict: dict = None,
             upgrade_hp: int = 0,
             upgrade_atk: dict = None,
+            sc_dict: dict = None,
     ):
         super().__init__(name, hp, atk, hp_defense, type_label, upgrade_hp, upgrade_atk, sc_dict)
 
@@ -97,8 +98,8 @@ class sc_T(sc_A):
             atk: dict = 0,
             hp_defense: int = 0,
             type_label: list = None,
-            sc_dict: dict = None,
             upgrade_hp: int = 0,
-            upgrade_atk: dict = None
+            upgrade_atk: dict = None,
+            sc_dict: dict = None,
     ):
         super().__init__(name, hp, atk, hp_defense, type_label, upgrade_hp, upgrade_atk, sc_dict)
