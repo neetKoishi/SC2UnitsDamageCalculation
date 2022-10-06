@@ -10,7 +10,6 @@ def func_SC(type_object_A: sc_A, type_object_B: sc_A) -> int:
         atk_A -= max(type_object_B.hp_defense, 0.5)
         num = ceil(type_object_B.hp / atk_A)
     elif type(type_object_B) == sc_Z:
-
         atk_A -= max(type_object_B.hp_defense, 0.5)
         num = ceil(type_object_B.hp / atk_A)
         if type_object_B.hp % atk_A == 0 and num != 1:

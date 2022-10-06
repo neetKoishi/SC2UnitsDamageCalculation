@@ -46,6 +46,22 @@ class sc_A:
     def type_label(self):
         return self._type_label
 
+    @property
+    def upgrade_atk(self):
+        return self._upgrade_atk
+
+    @property
+    def upgrade_hp(self):
+        return self._upgrade_hp
+
+    @atk.setter
+    def atk(self, value):
+        self._atk = value
+
+    @hp_defense.setter
+    def hp_defense(self, value):
+        self._hp_defense = value
+
 
 class sc_P(sc_A):
     def __init__(
