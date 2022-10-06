@@ -27,6 +27,10 @@ p_arr = createSc_obj('scPdata.csv')
 # for i in p_arr:
 #     print(i)
 p = [sc_P(sc_dict=i) for i in p_arr]
+t = []
+z = []
+
+sc_dic = {}
 
 
 def itermAll(*sc_list):
@@ -38,9 +42,8 @@ def itermAll(*sc_list):
             sc_obj_0: sc_A
             sc_obj_1: sc_A
             sc_obj_0, sc_obj_1 = sc_obj[0], sc_obj[1]
-            print(sc_obj_0.name, sc_obj_1.name)
+            # print(sc_obj_0.name, sc_obj_1.name)
             OD_calculate(sc_obj_0, sc_obj_1)
-
 
     elif len(sc_list) == 2:
         '''外战'''
@@ -54,17 +57,20 @@ def itermAll(*sc_list):
 
 
 def OD_calculate(sc_obj_0, sc_obj_1):
+    global sc_dic
+    arr1 = []
     for atk_num in range(3 + 1):
         sc_obj_g = copy(sc_obj_0)
         a = merge_dict(sc_obj_0.atk, mul_dict(sc_obj_0.upgrade_atk, atk_num))
         sc_obj_g.atk = a
-        print('-----------')
-        # print(sc_obj_g.atk)
-        for df in range(3 + 1):
+        # print('-----------')
+        for df_num in range(3 + 1):
             sc_obj_f = copy(sc_obj_1)
-            sc_obj_f.hp_defense += sc_obj_f.upgrade_hp * df
+            sc_obj_f.hp_defense += sc_obj_f.upgrade_hp * df_num
             # print(sc_obj_f.hp_defense)
-            print(f'攻击等级:{atk_num} 防御等级:{df} 次数:{func_SC(sc_obj_g, sc_obj_f)}')
+            arr1.append(f"'攻击等级': {atk_num},\n '防御等级': {df_num},\n '次数': {func_SC(sc_obj_g, sc_obj_f)}")
+    sc_name = sc_obj_0.name + ' ' + sc_obj_1.name
+    sc_dic[sc_name] = arr1
 
 
 def merge_dict(x, y) -> dict:
@@ -84,11 +90,10 @@ def mul_dict(x, y) -> dict:
     return dic
 
 
-itermAll(p, p)
-
 # 用literal_eval 转里面的字符串为字典
 # 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
-    ...
-
+    itermAll(p, p)
+    pddf = pd.DataFrame(sc_dic)
+    pddf.to_csv('1.csv', encoding='gbk')
 # 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
