@@ -18,7 +18,8 @@ for i in range(len(name_list)):
     temp_arr.append(sc_dict_temp)
 for i in temp_arr:
     print(i)
-
+p = [sc_P(sc_dict=i) for i in temp_arr]
+print(p[1].name)
 # 用literal_eval 转里面的字符串为字典
 # 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':

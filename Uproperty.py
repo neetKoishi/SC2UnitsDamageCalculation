@@ -1,3 +1,6 @@
+from ast import literal_eval
+
+
 class sc_A:
 
     def __init__(
@@ -13,7 +16,7 @@ class sc_A:
     ) -> None:
         if sc_dict:
             for k, v in sc_dict.items():
-                exec(f'self._{k}={v}')
+                exec(f'self._{k}=v')
         else:
             self._name: str = name
             self._type_label: list = type_label  # 标签
@@ -72,7 +75,6 @@ class sc_P(sc_A):
     @property
     def shield_defense(self):
         return self._shield_defense
-
 
 
 class sc_Z(sc_A):

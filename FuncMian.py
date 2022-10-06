@@ -44,14 +44,14 @@ if __name__ == '__main__':
     p = sc_P(sc_dict={
             'shield': 80,
             'shield_defense': 0,
-            'name': "'追猎'",
+            'name': '追猎',
             'hp': 80,
             'atk': {'': 13, '重甲': 18},
             'hp_defense': 1,
             'type_label': ['重甲', '机械单位']
                  })
     t = sc_T(sc_dict={
-        'name': "'陆战队员'",
+        'name': "陆战队员",
         'hp': 45,
         'atk': {'': 6},
         'hp_defense': 0,
