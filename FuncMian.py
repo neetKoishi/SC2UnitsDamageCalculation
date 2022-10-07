@@ -19,7 +19,7 @@ def func_SC(type_object_A: sc_A, type_object_B: sc_A) -> int:
         elif type(type_object_B) == sc_P:
             atk_A_shield = max(atk_A - type_object_B.shield_defense, 0.5)
             num_shield = ceil(type_object_B.shield / atk_A_shield)
-            middle = type_object_B.shield % atk_A_shield
+            middle = atk_A_shield - type_object_B.shield % atk_A_shield
             b_hp = type_object_B.hp
             if middle != 0:
                 b_hp = type_object_B.hp - max(middle - type_object_B.hp_defense, 0.5)
@@ -42,14 +42,23 @@ def sc_MatchTag(a: dict, b: list):
 
 if __name__ == '__main__':
     p = sc_P(sc_dict={
-            'shield': 80,
-            'shield_defense': 0,
-            'name': '追猎',
-            'hp': 80,
-            'atk': {'': 13, '重甲': 18},
-            'hp_defense': 1,
+            'shield': 70,
+            'shield_defense': 2,
+            'name': '使徒',
+            'hp': 70,
+            'atk': {'': 10, '重甲': 22+3*2},
+            'hp_defense': 2,
             'type_label': ['重甲', '机械单位']
                  })
+    p2 = sc_P(sc_dict={
+        'shield': 50,
+        'shield_defense': 1,
+        'name': '使徒',
+        'hp': 100,
+        'atk': {'': 10, '重甲': 22 + 3 * 2},
+        'hp_defense': 2,
+        'type_label': ['重甲', '机械单位']
+    })
     t = sc_T(sc_dict={
         'name': "陆战队员",
         'hp': 45,
@@ -59,4 +68,4 @@ if __name__ == '__main__':
     })
     print(p, p.__dict__)
     print(p.shield)
-    print(func_SC(p, t))
+    print(func_SC(p, p2))
