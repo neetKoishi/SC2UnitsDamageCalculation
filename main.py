@@ -1,11 +1,18 @@
 from copy import copy
+
+import numpy as np
 import pandas as pd
 from ast import literal_eval
+
+from openpyxl.utils import get_column_letter
+
 from Uproperty import *
 from itertools import combinations_with_replacement, product
 from FuncMian import *
+from memory_profiler import profile
 
 
+# @profile
 def createSc_obj(file_path: str) -> list:
     csv = pd.read_csv(file_path, )
     # print(csv)
@@ -23,16 +30,10 @@ def createSc_obj(file_path: str) -> list:
     return temp_arr
 
 
-p_arr = createSc_obj('scPdata.csv')
-# for i in p_arr:
-#     print(i)
-p = [sc_P(sc_dict=i) for i in p_arr]
-t = []
-z = []
-
 sc_dic = {}
 
 
+# @profile
 def itermAll(*sc_list):
     if len(sc_list) == 1 or type(sc_list[0]) == type(sc_list[1]):
         '''内战'''
@@ -42,7 +43,6 @@ def itermAll(*sc_list):
             sc_obj_0: sc_A
             sc_obj_1: sc_A
             sc_obj_0, sc_obj_1 = sc_obj[0], sc_obj[1]
-            # print(sc_obj_0.name, sc_obj_1.name)
             OD_calculate(sc_obj_0, sc_obj_1)
 
     elif len(sc_list) == 2:
@@ -50,7 +50,7 @@ def itermAll(*sc_list):
         # print(2)
         sc_list1, sc_list2 = sc_list[0], sc_list[1]
         for sc_obj in product(sc_list1, sc_list2):
-            print(sc_obj[0].name, sc_obj[1].name)
+            # print(sc_obj[0].name, sc_obj[1].name)
             OD_calculate(sc_obj[0], sc_obj[1])
     else:
         raise print('超2个参数')
@@ -67,8 +67,15 @@ def OD_calculate(sc_obj_0, sc_obj_1):
         for df_num in range(3 + 1):
             sc_obj_f = copy(sc_obj_1)
             sc_obj_f.hp_defense += sc_obj_f.upgrade_hp * df_num
-            # print(sc_obj_f.hp_defense)
-            arr1.append(f"'攻击等级': {atk_num},\n '防御等级': {df_num},\n '次数': {func_SC(sc_obj_g, sc_obj_f)}")
+            if type(sc_obj_0) == sc_P or type(sc_obj_1) == sc_P:
+                """当有P时,添加护盾类型"""
+                for sh_num in range(3 + 1):
+                    sc_obj_s = copy(sc_obj_f)
+                    sc_obj_s.shield_defense += sc_obj_s.upgrade_shield * sh_num
+                    arr1.append(func_SC(sc_obj_g, sc_obj_s))
+            else:
+                arr1.append(func_SC(sc_obj_g, sc_obj_f))
+
     sc_name = sc_obj_0.name + ' ' + sc_obj_1.name
     sc_dic[sc_name] = arr1
 
@@ -90,10 +97,57 @@ def mul_dict(x, y) -> dict:
     return dic
 
 
+def to_xlsx(f: pd.DataFrame, filePath: str):
+    """对表格进行分类处理并写入Excel"""
+    excel_dic1 = {}
+    excel_dic2 = {}
+
+    for column in f.columns:
+        unit_str = column.split(' ')[0]
+        unit_str_f = column.split(' ')[1]
+        # print(unit_str)
+
+        if unit_str not in excel_dic1:
+            temp_arr1 = [column]
+            # temp_arr2 = [unit_str_f]
+
+            excel_dic1[unit_str] = None
+            excel_dic2[unit_str] = {column: unit_str_f}
+        else:
+            temp_arr1.append(column)
+            # temp_arr2.append(unit_str_f)
+            excel_dic1[unit_str] = temp_arr1
+            excel_dic2[unit_str][column] = unit_str_f
+            # excel_dic2[colums] = temp_arr2
+    # excel_path = 'output.xlsx'
+    with pd.ExcelWriter(filePath) as writer:
+        for i in excel_dic1:
+            # print(i)
+            unit_df = f[excel_dic1[i]]
+            unit_df = unit_df.rename(columns=excel_dic2[i])
+            # unit_df.to_excel(writer, sheet_name=i)
+            to_excel_auto_column_weight(unit_df, writer, i)
+
+
+def to_excel_auto_column_weight(df: pd.DataFrame, writer: pd.ExcelWriter, sheet_name):
+    """DataFrame保存为excel并设置A列列宽"""
+    # 数据 to 写入器，并指定sheet名称
+    df.to_excel(writer, sheet_name=sheet_name)
+    worksheet = writer.sheets[sheet_name]
+    worksheet.column_dimensions['A'].width = 30
+
+
 # 用literal_eval 转里面的字符串为字典
 # 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
+    p_arr = createSc_obj('scPdata.csv')
+    p = [sc_P(sc_dict=i) for i in p_arr]
+    t = []
+    z = []
     itermAll(p, p)
-    pddf = pd.DataFrame(sc_dic)
-    pddf.to_csv('1.csv', encoding='gbk')
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+    index_arr_p = [f'攻击等级{i},防御等级{j},盾等级{k}' for i in range(4) for j in range(4) for k in range(4)]
+    pdDf = pd.DataFrame(sc_dic, index=index_arr_p)
+
+    excel_path = 'output.xlsx'
+    to_xlsx(pdDf, excel_path)
+    # pddf.to_csv('2.csv', encoding='gbk')
