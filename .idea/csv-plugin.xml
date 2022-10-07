@@ -17,6 +17,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\scTdata.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\scZdata.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\神族内战.csv">
           <value>
             <Attribute>

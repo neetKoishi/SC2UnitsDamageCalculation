@@ -30,12 +30,10 @@ def createSc_obj(file_path: str) -> list:
     return temp_arr
 
 
-sc_dic = {}
-
-
 # @profile
 def itermAll(*sc_list):
-    if len(sc_list) == 1 or type(sc_list[0]) == type(sc_list[1]):
+    """修改sc_dict"""
+    if len(sc_list) == 1 or type(sc_list[0][0]) == type(sc_list[1][0]):
         '''内战'''
         # print(1)
         sc_list = sc_list[0]
@@ -57,6 +55,7 @@ def itermAll(*sc_list):
 
 
 def OD_calculate(sc_obj_0, sc_obj_1):
+    """传入2个sc_object, 并变成可以传入DataFrame的dict"""
     global sc_dic
     arr1 = []
     for atk_num in range(3 + 1):
@@ -67,8 +66,8 @@ def OD_calculate(sc_obj_0, sc_obj_1):
         for df_num in range(3 + 1):
             sc_obj_f = copy(sc_obj_1)
             sc_obj_f.hp_defense += sc_obj_f.upgrade_hp * df_num
-            if type(sc_obj_0) == sc_P or type(sc_obj_1) == sc_P:
-                """当有P时,添加护盾类型"""
+            if type(sc_obj_1) == sc_P:
+                """当防守为P时,添加护盾类型"""
                 for sh_num in range(3 + 1):
                     sc_obj_s = copy(sc_obj_f)
                     sc_obj_s.shield_defense += sc_obj_s.upgrade_shield * sh_num
@@ -108,15 +107,14 @@ def to_xlsx(f: pd.DataFrame, filePath: str):
         # print(unit_str)
 
         if unit_str not in excel_dic1:
-            temp_arr1 = [column]
+
             # temp_arr2 = [unit_str_f]
 
-            excel_dic1[unit_str] = None
+            excel_dic1[unit_str] = [column]
             excel_dic2[unit_str] = {column: unit_str_f}
         else:
-            temp_arr1.append(column)
+            excel_dic1[unit_str].append(column)
             # temp_arr2.append(unit_str_f)
-            excel_dic1[unit_str] = temp_arr1
             excel_dic2[unit_str][column] = unit_str_f
             # excel_dic2[colums] = temp_arr2
     # excel_path = 'output.xlsx'
@@ -135,21 +133,33 @@ def to_excel_auto_column_weight(df: pd.DataFrame, writer: pd.ExcelWriter, sheet_
     df.to_excel(writer, sheet_name=sheet_name)
     worksheet = writer.sheets[sheet_name]
     worksheet.column_dimensions['A'].width = 30
-    for i in [chr(k) for k in range(ord("B"), ord("V")+1)]:
+    for i in [chr(k) for k in range(ord("B"), ord("V") + 1)]:
         worksheet.column_dimensions[i].width = 10
 
 
 # 用literal_eval 转里面的字符串为字典
 # 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
-    p_arr = createSc_obj('scPdata.csv')
-    p = [sc_P(sc_dict=i) for i in p_arr]
-    t = []
-    z = []
-    itermAll(p, p)
-    index_arr_p = [f'攻击等级{i},防御等级{j},盾等级{k}' for i in range(4) for j in range(4) for k in range(4)]
-    pdDf = pd.DataFrame(sc_dic, index=index_arr_p)
 
-    excel_path = 'output.xlsx'
-    to_xlsx(pdDf, excel_path)
+    p_arr = createSc_obj('scPdata.csv')
+    t_arr = createSc_obj('scTdata.csv')
+    z_arr = createSc_obj('scZdata.csv')
+    p = [sc_P(sc_dict=i) for i in p_arr]
+    t = [sc_T(sc_dict=i) for i in t_arr]
+    z = [sc_Z(sc_dict=i) for i in z_arr]
+
+    # print(p, t, z)
+    index_arr_p = [f'攻击等级{i},防御等级{j},盾等级{k}' for i in range(4) for j in range(4) for k in range(4)]
+    index_arr_unP = [f'攻击等级{i},防御等级{j}' for i in range(4) for j in range(4)]
+    for item in product([p, t, z], repeat=2):
+        sc_dic = {}
+
+        itermAll(item[0], item[1])
+        if sc_P == type(item[1][0]):
+            pdDf = pd.DataFrame(sc_dic, index=index_arr_p)
+        else:
+            pdDf = pd.DataFrame(sc_dic, index=index_arr_unP)
+        F = lambda x: str(type(x)).split("'")[-2].split('_')[-1]
+        excel_path = f'{F(item[0][0])}v{F(item[1][0])}.xlsx'
+        to_xlsx(pdDf, excel_path)
     # pddf.to_csv('2.csv', encoding='gbk')
