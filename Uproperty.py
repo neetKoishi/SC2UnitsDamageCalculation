@@ -91,6 +91,8 @@ class sc_P(sc_A):
     @property
     def shield_defense(self):
         return self._shield_defense
+
+
     @property
     def upgrade_shield(self):
         return self._upgrade_shield

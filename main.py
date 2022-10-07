@@ -14,7 +14,7 @@ from memory_profiler import profile
 
 # @profile
 def createSc_obj(file_path: str) -> list:
-    csv = pd.read_csv(file_path, )
+    csv = pd.read_csv(file_path, encoding='gbk')
     # print(csv)
     csv_dict = csv.to_dict(orient='list')
     name_list = copy(csv_dict['name'])
