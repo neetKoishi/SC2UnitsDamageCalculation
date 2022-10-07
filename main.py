@@ -135,6 +135,8 @@ def to_excel_auto_column_weight(df: pd.DataFrame, writer: pd.ExcelWriter, sheet_
     df.to_excel(writer, sheet_name=sheet_name)
     worksheet = writer.sheets[sheet_name]
     worksheet.column_dimensions['A'].width = 30
+    for i in [chr(k) for k in range(ord("B"), ord("V")+1)]:
+        worksheet.column_dimensions[i].width = 10
 
 
 # 用literal_eval 转里面的字符串为字典
