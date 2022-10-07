@@ -25,13 +25,13 @@ def func_SC(type_object_A: sc_A, type_object_B: sc_A) -> int:
             if type_object_B.shield % atk_A_shield != 0:
                 b_hp = type_object_B.hp - max(middle - type_object_B.hp_defense, 0.5)  # 通过溢出攻击力-血防 计算剩下hp
             num_hp = ceil(b_hp / max(atk_A - type_object_B.hp_defense, 0.5))  # 向上取整对剩下hp的攻击次数
-            num = num_hp + num_shield
+            num += num_hp + num_shield
     elif atk_A != 0 and flag == 1:
         """当攻击类型为对护盾加成的技能伤害时"""
         if type(type_object_B) == sc_T:
-            num = ceil(type_object_B.hp / atk_A)
+            num += ceil(type_object_B.hp / atk_A)
         elif type(type_object_B) == sc_Z:
-            num = ceil(type_object_B.hp / atk_A)
+            num += ceil(type_object_B.hp / atk_A)
             if type_object_B.hp % atk_A == 0 and num != 1:
                 num += 1
         elif type(type_object_B) == sc_P:
@@ -44,11 +44,12 @@ def func_SC(type_object_A: sc_A, type_object_B: sc_A) -> int:
             middle_shield = b_shield - ((atk_A + atk_A_shield) * num_shield)
             if middle_shield > atk_A_shield:
                 b_hp -= atk_A - (middle_shield - atk_A_shield)
+                b_hp = max(b_hp, 0)
                 num += 1
                 num_hp = ceil(b_hp / atk_A)
             else:
                 num_hp = ceil(b_hp / atk_A)
-            num = num_shield + num_hp
+            num += num_shield + num_hp
 
     return num
 
@@ -80,10 +81,10 @@ if __name__ == '__main__':
         'type_label': ['重甲', '机械单位']
     })
     p2 = sc_P(sc_dict={
-        'shield': 20,
+        'shield': 50,
         'shield_defense': 2,
         'name': '探鸡',
-        'hp': 20,
+        'hp': 100,
         'atk': {'': 10, '重甲': 22 + 3 * 2},
         'hp_defense': 0,
         'type_label': ['重甲', '机械单位']
@@ -97,4 +98,4 @@ if __name__ == '__main__':
     })
     print(p, p.__dict__)
     print(p.shield)
-    print(func_SC(t, p))
+    print(func_SC(t, p2))
