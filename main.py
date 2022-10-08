@@ -152,6 +152,7 @@ if __name__ == '__main__':
     index_arr_p = [f'攻击等级{i},防御等级{j},盾等级{k}' for i in range(4) for j in range(4) for k in range(4)]
     index_arr_unP = [f'攻击等级{i},防御等级{j}' for i in range(4) for j in range(4)]
     for item in product([p, t, z], repeat=2):
+    # for item in [(z,p),(z,t),(z,z)]:
         sc_dic = {}
 
         itermAll(item[0], item[1])
