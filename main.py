@@ -1,20 +1,16 @@
+# coding=utf-8
 from copy import copy
-
-import numpy as np
+import os
 import pandas as pd
-from ast import literal_eval
-
-from openpyxl.utils import get_column_letter
 
 from Uproperty import *
 from itertools import combinations_with_replacement, product
 from FuncMian import *
-from memory_profiler import profile
 
 
 # @profile
 def createSc_obj(file_path: str) -> list:
-    csv = pd.read_csv(file_path, encoding='gbk')
+    csv = pd.read_csv(os.getcwd() + "\\" + file_path, encoding='gbk')
     # print(csv)
     csv_dict = csv.to_dict(orient='list')
     name_list = copy(csv_dict['name'])
@@ -24,34 +20,27 @@ def createSc_obj(file_path: str) -> list:
         sc_dict_temp = {}
         for k in csv_dict:
             sc_dict_temp[k] = csv_dict[k][p]
-            if k in ('atk', 'upgrade_atk', 'type_label'):
+            if k in ('atk', 'upgrade_atk', 'type_label', 'unit_type', 'atk_type'):
+                """将表格中的字符串转dict或者list"""
                 sc_dict_temp[k] = literal_eval(csv_dict[k][p])
         temp_arr.append(sc_dict_temp)
     return temp_arr
 
 
 # @profile
-def itermAll(*sc_list):
-    """修改sc_dict"""
-    if len(sc_list) == 1 or type(sc_list[0][0]) == type(sc_list[1][0]):
-        '''内战'''
-        # print(1)
-        sc_list = sc_list[0]
-        for sc_obj in product(sc_list, repeat=2):
-            sc_obj_0: sc_A
-            sc_obj_1: sc_A
-            sc_obj_0, sc_obj_1 = sc_obj[0], sc_obj[1]
-            OD_calculate(sc_obj_0, sc_obj_1)
+def itermAll(sc_list1, sc_list2):
+    """修改sc_dict, 1进攻,2防守"""
 
-    elif len(sc_list) == 2:
-        '''外战'''
-        # print(2)
-        sc_list1, sc_list2 = sc_list[0], sc_list[1]
-        for sc_obj in product(sc_list1, sc_list2):
-            # print(sc_obj[0].name, sc_obj[1].name)
+    # print(sc_list1, sc_list2)
+    flag = None
+    for sc_obj in product(sc_list1, sc_list2):
+        # print(sc_obj[0].name, sc_obj[1].name)
+        new_flag = sc_obj[1].flag
+        if flag == new_flag:
+            continue
+        if atk_type_bool(sc_obj[0].atk_type, sc_obj[1].unit_type):
             OD_calculate(sc_obj[0], sc_obj[1])
-    else:
-        raise print('超2个参数')
+        flag = new_flag
 
 
 def OD_calculate(sc_obj_0, sc_obj_1):
@@ -96,6 +85,16 @@ def mul_dict(x, y) -> dict:
     return dic
 
 
+def atk_type_bool(a: list, b: list) -> bool:
+    if len(a) == 0:
+        return False
+    else:
+        for i in a:
+            if i in b:
+                return True
+        return False
+
+
 def to_xlsx(f: pd.DataFrame, filePath: str):
     """对表格进行分类处理并写入Excel"""
     excel_dic1 = {}
@@ -118,13 +117,20 @@ def to_xlsx(f: pd.DataFrame, filePath: str):
             excel_dic2[unit_str][column] = unit_str_f
             # excel_dic2[colums] = temp_arr2
     # excel_path = 'output.xlsx'
+
     with pd.ExcelWriter(filePath) as writer:
         for i in excel_dic1:
             # print(i)
             unit_df = f[excel_dic1[i]]
             unit_df = unit_df.rename(columns=excel_dic2[i])
-            # unit_df.to_excel(writer, sheet_name=i)
+            unit_df.to_excel(writer, sheet_name=i)
             to_excel_auto_column_weight(unit_df, writer, i)
+
+    # for i in excel_dic1:
+    #     unit_df = f[excel_dic1[i]]
+    #     unit_df = unit_df.rename(columns=excel_dic2[i])
+    #     print(i, '==========')
+    #     print(unit_df)
 
 
 def to_excel_auto_column_weight(df: pd.DataFrame, writer: pd.ExcelWriter, sheet_name):
@@ -141,9 +147,9 @@ def to_excel_auto_column_weight(df: pd.DataFrame, writer: pd.ExcelWriter, sheet_
 # 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
 
-    p_arr = createSc_obj('scPdata.csv')
-    t_arr = createSc_obj('scTdata.csv')
-    z_arr = createSc_obj('scZdata.csv')
+    p_arr = createSc_obj('data/scPdata.csv')
+    t_arr = createSc_obj('data/scTdata.csv')
+    z_arr = createSc_obj('data/scZdata.csv')
     p = [sc_P(sc_dict=i) for i in p_arr]
     t = [sc_T(sc_dict=i) for i in t_arr]
     z = [sc_Z(sc_dict=i) for i in z_arr]
@@ -152,7 +158,8 @@ if __name__ == '__main__':
     index_arr_p = [f'攻击等级{i},防御等级{j},盾等级{k}' for i in range(4) for j in range(4) for k in range(4)]
     index_arr_unP = [f'攻击等级{i},防御等级{j}' for i in range(4) for j in range(4)]
     for item in product([p, t, z], repeat=2):
-    # for item in [(z,p),(z,t),(z,z)]:
+    # for item in [(t, t)]:
+        #     print(item)
         sc_dic = {}
 
         itermAll(item[0], item[1])
@@ -161,6 +168,6 @@ if __name__ == '__main__':
         else:
             pdDf = pd.DataFrame(sc_dic, index=index_arr_unP)
         F = lambda x: str(type(x)).split("'")[-2].split('_')[-1]
-        excel_path = f'{F(item[0][0])}v{F(item[1][0])}.xlsx'
+        excel_path = fr'{os.getcwd()}\data\{F(item[0][0])}v{F(item[1][0])}.xlsx'
         to_xlsx(pdDf, excel_path)
     # pddf.to_csv('2.csv', encoding='gbk')

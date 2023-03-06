@@ -1,3 +1,4 @@
+# coding=utf-8
 from Uproperty import sc_P, sc_T, sc_Z, sc_A
 from math import ceil
 

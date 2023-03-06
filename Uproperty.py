@@ -1,3 +1,4 @@
+# coding=utf-8
 from ast import literal_eval
 
 
@@ -13,6 +14,10 @@ class sc_A:
             upgrade_hp: int,
             upgrade_atk: dict,
             sc_dict: dict,
+            unit_type: list = None,
+            akt_type: list = None,
+            flag: int = None
+
     ) -> None:
         if sc_dict:
             for k, v in sc_dict.items():
@@ -25,6 +30,9 @@ class sc_A:
             self._hp_defense: int = hp_defense  # 血防
             self._upgrade_hp: int = upgrade_hp  # 防御升级
             self._upgrade_atk: dict = upgrade_atk  # 攻击升级
+            self._unit_type = unit_type
+            self._atk_type = akt_type
+            self._flag = flag
 
     @property
     def name(self):
@@ -53,6 +61,18 @@ class sc_A:
     @property
     def upgrade_hp(self):
         return self._upgrade_hp
+
+    @property
+    def unit_type(self):
+        return self._unit_type
+
+    @property
+    def atk_type(self):
+        return self._atk_type
+
+    @property
+    def flag(self):
+        return self._flag
 
     @atk.setter
     def atk(self, value):
@@ -91,7 +111,6 @@ class sc_P(sc_A):
     @property
     def shield_defense(self):
         return self._shield_defense
-
 
     @property
     def upgrade_shield(self):
