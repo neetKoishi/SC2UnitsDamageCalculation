@@ -7,7 +7,8 @@
 3. `pip install openpyxl `
 4. 诺无conda环境,`pip install pandas `
 5. `data/sc(P/T/Z)data.csv `是各单位的数据; `(XvX).xlsx`是计算后得出的数据(没出错的话会有9个xlsx文件)
-6. 由于在最开始没想用panda处理数据,想原生库随便写写就用的csv文件,所以如果版本更新了需要变动单位数据,需要注意文件保持格式得要UTF-8不然会报错
+6. 由于在最开始没想用panda处理数据,想原生库随便写写就用的csv文件,所以如果版本更新了需要变动单位数据,需要注意文件保持格式要与
+`csv = pd.read_csv(os.getcwd() + "\\" + file_path, encoding='gbk')`里的encoding一致得要不然会报错
    这点以后会转成xlsx(有生之年)
 7. ![单位数据](picture\1.png)
 8. ![输出数据](picture\p2.png)
