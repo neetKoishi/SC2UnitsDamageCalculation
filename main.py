@@ -10,7 +10,7 @@ from FuncMian import *
 
 # @profile
 def createSc_obj(file_path: str) -> list:
-    csv = pd.read_csv(os.getcwd() + "\\" + file_path, encoding='utf-8')
+    csv = pd.read_csv(os.getcwd() + "\\" + file_path, encoding='gbk')  # 读取csv文件encoding为csv的编码
     # print(csv)
     csv_dict = csv.to_dict(orient='list')
     name_list = copy(csv_dict['name'])

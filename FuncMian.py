@@ -93,7 +93,7 @@ if __name__ == '__main__':
     t = sc_T(sc_dict={
         'name': "寡妇雷",
         'hp': 45,
-        'atk': {'': 125, 'shield': 35},
+        'atk': {'': 125, '重甲': 35},
         'hp_defense': 0,
         'type_label': ['轻甲', '生物单位']
     })
