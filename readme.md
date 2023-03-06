@@ -6,5 +6,5 @@
 4. `data/sc(P/T/Z)data.csv `是各单位的数据; `(XvX).xlsx`是计算后得出的数据(没出错的话会有9个xlsx文件)
 5. 由于在最开始没想用panda处理数据,想原生库随便写写就用的csv文件,所以如果版本更新了需要变动单位数据,需要注意文件保持格式得要UTF-8不然会报错  
 这点以后会转成xlsx(有生之年)
-6. ![](I:\pyprojecter\SC2Func\picture\1.png)
-7. ![](I:\pyprojecter\SC2Func\picture\p2.png)
+6. ![](picture\1.png)
+7. ![](picture\p2.png)
